@@ -1,0 +1,23 @@
+flowchart TD
+    start([Start]) --> openAddBook[Librarian clicks Them Sach Moi]
+    openAddBook --> checkRole{Logged in as librarian?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| showForm[Display add book form]
+
+    showForm --> fillBookForm[Enter title, author, publish year, ISBN, category, description, quantity]
+    fillBookForm --> submitForm[Click Save]
+    submitForm --> validateFields{All required fields valid?}
+
+    validateFields -->|No| fieldError[Show validation errors]
+    fieldError --> fillBookForm
+    validateFields -->|Yes| checkCategory{Category exists?}
+
+    checkCategory -->|No| categoryError[Show missing category error]
+    categoryError --> fillBookForm
+    checkCategory -->|Yes| createBook[Create book record]
+
+    createBook --> setStatus[Set initial status = Co san]
+    setStatus --> saveBook[Save to database]
+    saveBook --> success[Show Them sach thanh cong]
+    success --> endNode([End])

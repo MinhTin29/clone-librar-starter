@@ -1,0 +1,14 @@
+flowchart TD
+    start([Start]) --> openFines[Reader opens fines page]
+    openFines --> checkLogin{Logged in as reader?}
+    checkLogin -->|No| denyAccess[Redirect to login]
+    denyAccess --> endNode([End])
+    checkLogin -->|Yes| loadUnpaidFines[Load unpaid fines]
+
+    loadUnpaidFines --> showFines[Display reason, amount, date, status]
+    showFines --> selectFine[Select fine with status Chua thanh toan]
+    selectFine --> payTransfer[Reader transfers payment via bank]
+    payTransfer --> clickPaid[Click Da thanh toan]
+    clickPaid --> updatePending[Update fine status = Cho xac nhan]
+    updatePending --> showPending[Show waiting for librarian confirmation]
+    showPending --> endNode

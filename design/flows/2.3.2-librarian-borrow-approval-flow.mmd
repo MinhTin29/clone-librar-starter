@@ -1,0 +1,26 @@
+flowchart TD
+    start([Start]) --> openPendingPage[Librarian opens pending borrow requests]
+    openPendingPage --> checkRole{Logged in as librarian?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| loadRequests[Load requests with status Cho xac nhan]
+
+    loadRequests --> selectRequest[Select a borrow request]
+    selectRequest --> chooseAction{Confirm or reject?}
+
+    chooseAction -->|Confirm| confirmBorrow[Click Xac nhan]
+    chooseAction -->|Reject| rejectBorrow[Click Tu choi]
+
+    confirmBorrow --> updateApproved[Update request status = Da muon]
+    updateApproved --> decreaseStock[Decrease available book quantity]
+    decreaseStock --> confirmSuccess[Show confirmation success]
+    confirmSuccess --> endNode
+
+    rejectBorrow --> enterReason[Enter mandatory rejection reason]
+    enterReason --> validateReason{Reason provided?}
+    validateReason -->|No| reasonError[Show missing reason error]
+    reasonError --> enterReason
+    validateReason -->|Yes| updateRejected[Update request status = Bi tu choi]
+    updateRejected --> saveReason[Save rejection reason]
+    saveReason --> rejectSuccess[Show rejection success]
+    rejectSuccess --> endNode

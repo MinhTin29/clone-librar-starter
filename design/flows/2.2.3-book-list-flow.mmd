@@ -1,0 +1,26 @@
+flowchart TD
+    start([Start]) --> openBookList[User opens book list page]
+    openBookList --> loadBooks[System loads paginated book list]
+    loadBooks --> showBooks[Display title, author, year, category, available count, borrowed count]
+    showBooks --> chooseAction{Choose action}
+
+    chooseAction -->|Search| enterSearch[Enter title or author keyword]
+    chooseAction -->|Filter| chooseCategory[Select category filter]
+    chooseAction -->|Sort| chooseSort[Select sort option]
+    chooseAction -->|Paginate| changePage[Go to another page]
+    chooseAction -->|Open detail| openDetail[Open book detail]
+    chooseAction -->|Exit| endNode([End])
+
+    enterSearch --> applySearch[Reload results by keyword]
+    applySearch --> showBooks
+
+    chooseCategory --> applyFilter[Reload results by category]
+    applyFilter --> showBooks
+
+    chooseSort --> applySort[Reload results by selected sort]
+    applySort --> showBooks
+
+    changePage --> loadNextPage[Load selected page with 10 books]
+    loadNextPage --> showBooks
+
+    openDetail --> endNode

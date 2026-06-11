@@ -1,0 +1,21 @@
+flowchart TD
+    start([Start]) --> openUserList[Admin opens user list]
+    openUserList --> checkRole{Logged in as admin?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| loadUsers[Load users with email, name, role, join date, status]
+
+    loadUsers --> chooseAction{Choose action}
+    chooseAction -->|Search| searchUsers[Search by email or name]
+    chooseAction -->|Filter role| filterRole[Filter by role]
+    chooseAction -->|Toggle status| toggleStatus[Activate or deactivate account]
+    chooseAction -->|Exit| endNode
+
+    searchUsers --> applySearch[Reload matching users]
+    applySearch --> loadUsers
+
+    filterRole --> applyRoleFilter[Reload filtered users]
+    applyRoleFilter --> loadUsers
+
+    toggleStatus --> updateStatus[Update account activation status]
+    updateStatus --> loadUsers

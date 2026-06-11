@@ -1,0 +1,30 @@
+flowchart TD
+    start([Start]) --> openHistory[Reader opens borrow history page]
+    openHistory --> checkLogin{Logged in as reader?}
+    checkLogin -->|No| denyAccess[Redirect to login]
+    denyAccess --> endNode([End])
+    checkLogin -->|Yes| loadHistory[Load current, returned, rejected, overdue borrow records]
+
+    loadHistory --> showHistory[Display book info, dates, remaining days, status, rejection reason when available]
+    showHistory --> chooseAction{Choose action}
+
+    chooseAction -->|Filter by status| filterStatus[Apply status filter]
+    chooseAction -->|View rejection reason| openReason[Show rejection reason]
+    chooseAction -->|Request return| requestReturn[Create return request for borrowed book]
+    chooseAction -->|Renew| renewBorrow[Request renewal for borrowed book]
+    chooseAction -->|Exit| endNode
+
+    filterStatus --> loadFiltered[Reload filtered history]
+    loadFiltered --> showHistory
+
+    openReason --> showHistory
+
+    requestReturn --> returnFlow[Go to return request flow]
+    returnFlow --> showHistory
+
+    renewBorrow --> eligibleRenewal{Not overdue and not renewed before?}
+    eligibleRenewal -->|No| renewError[Show renewal not allowed]
+    renewError --> showHistory
+    eligibleRenewal -->|Yes| extendDueDate[Extend due date by 7 days]
+    extendDueDate --> renewSuccess[Show renewal success]
+    renewSuccess --> showHistory

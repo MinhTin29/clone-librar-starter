@@ -1,0 +1,27 @@
+flowchart TD
+    start([Start]) --> openBookDetail[Librarian opens book detail]
+    openBookDetail --> checkRole{Logged in as librarian?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| chooseAction{Choose action}
+
+    chooseAction -->|Edit| clickEdit[Click Sua]
+    chooseAction -->|Delete| clickDelete[Click Xoa]
+    chooseAction -->|Exit| endNode
+
+    clickEdit --> editForm[Update book information]
+    editForm --> validateEdit{Updated fields valid?}
+    validateEdit -->|No| editError[Show validation errors]
+    editError --> editForm
+    validateEdit -->|Yes| saveEdit[Save book changes]
+    saveEdit --> editSuccess[Show updated detail]
+    editSuccess --> endNode
+
+    clickDelete --> confirmDelete{Confirm delete?}
+    confirmDelete -->|No| endNode
+    confirmDelete -->|Yes| hasActiveBorrow{Has active borrow orders?}
+    hasActiveBorrow -->|Yes| deleteBlocked[Show cannot delete message]
+    deleteBlocked --> endNode
+    hasActiveBorrow -->|No| deleteBook[Delete book]
+    deleteBook --> deleteSuccess[Show delete success]
+    deleteSuccess --> endNode

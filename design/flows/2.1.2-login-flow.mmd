@@ -1,0 +1,27 @@
+flowchart TD
+    start([Start]) --> openLogin[User opens login page]
+    openLogin --> fillCredentials[Enter email and password]
+    fillCredentials --> submitLogin[Click Dang nhap]
+
+    submitLogin --> validateEmail{Email format valid?}
+    validateEmail -->|No| emailError[Show invalid email error]
+    emailError --> fillCredentials
+    validateEmail -->|Yes| validatePassword{Password length 8-16 and not empty?}
+
+    validatePassword -->|No| passwordError[Show password validation error]
+    passwordError --> fillCredentials
+    validatePassword -->|Yes| authenticate[System authenticates account]
+
+    authenticate --> accountValid{Credentials valid?}
+    accountValid -->|No| authError[Show login failed message]
+    authError --> fillCredentials
+    accountValid -->|Yes| createSession[Create JWT session for 24h]
+
+    createSession --> routeByRole{User role?}
+    routeByRole -->|Reader| readerDashboard[Redirect to reader dashboard]
+    routeByRole -->|Librarian| librarianDashboard[Redirect to librarian dashboard]
+    routeByRole -->|Admin| adminDashboard[Redirect to admin dashboard]
+
+    readerDashboard --> endNode([End])
+    librarianDashboard --> endNode
+    adminDashboard --> endNode

@@ -1,0 +1,19 @@
+flowchart TD
+    start([Start]) --> openHistory[Reader opens borrow history page]
+    openHistory --> checkLogin{Logged in as reader?}
+    checkLogin -->|No| denyAccess[Redirect to login]
+    denyAccess --> endNode([End])
+    checkLogin -->|Yes| showBorrowedBooks[Display currently borrowed books]
+
+    showBorrowedBooks --> selectBook[Click Xin tra sach on selected book]
+    selectBook --> existingRequest{Pending return request already exists?}
+    existingRequest -->|Yes| blockDuplicate[Show duplicate request message]
+    blockDuplicate --> endNode
+    existingRequest -->|No| confirmRequest{Confirm in modal?}
+
+    confirmRequest -->|No| endNode
+    confirmRequest -->|Yes| createReturnRequest[Create return request]
+    createReturnRequest --> setPending[Set status = Cho xac nhan]
+    setPending --> saveRequest[Save return request]
+    saveRequest --> remindPhysicalReturn[Inform reader to bring book to library]
+    remindPhysicalReturn --> endNode

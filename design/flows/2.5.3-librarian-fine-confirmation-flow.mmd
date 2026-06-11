@@ -1,0 +1,21 @@
+flowchart TD
+    start([Start]) --> openFineConfirm[Librarian opens fines list]
+    openFineConfirm --> checkRole{Logged in as librarian?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| loadPendingFines[Load fines awaiting confirmation]
+
+    loadPendingFines --> viewFineDetail[View fine detail]
+    viewFineDetail --> chooseAction{Payment valid?}
+
+    chooseAction -->|Yes| confirmPaid[Click Da thanh toan]
+    chooseAction -->|No| rejectPayment[Reject payment]
+
+    confirmPaid --> markPaid[Update fine status = Da thanh toan]
+    markPaid --> paymentSuccess[Show confirmation success]
+    paymentSuccess --> endNode
+
+    rejectPayment --> enterRejectReason[Enter rejection reason]
+    enterRejectReason --> saveReject[Update fine status = Tu choi and save reason]
+    saveReject --> rejectSuccess[Show rejection result]
+    rejectSuccess --> endNode

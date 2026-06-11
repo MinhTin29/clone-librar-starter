@@ -1,0 +1,33 @@
+flowchart TD
+    start([Start]) --> openCategoryPage[Librarian opens category management]
+    openCategoryPage --> checkRole{Logged in as librarian?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| loadCategories[Load category table]
+
+    loadCategories --> chooseAction{Choose action}
+    chooseAction -->|View or inline edit| editCategory[Edit category name in table]
+    chooseAction -->|Add new| addCategory[Click Them the loai sach]
+    chooseAction -->|Delete| selectDelete[Click Xoa on category row]
+    chooseAction -->|Exit| endNode
+
+    editCategory --> validateEdit{Name not empty and <= 50 chars?}
+    validateEdit -->|No| editError[Show validation error]
+    editError --> editCategory
+    validateEdit -->|Yes| saveEdit[Save category update]
+    saveEdit --> loadCategories
+
+    addCategory --> fillCategoryName[Enter category name]
+    fillCategoryName --> validateAdd{Name not empty and <= 50 chars?}
+    validateAdd -->|No| addError[Show validation error]
+    addError --> fillCategoryName
+    validateAdd -->|Yes| saveNewCategory[Create new category]
+    saveNewCategory --> loadCategories
+
+    selectDelete --> hasBooks{Category has books?}
+    hasBooks -->|Yes| blockDelete[Show cannot delete message]
+    blockDelete --> loadCategories
+    hasBooks -->|No| confirmDelete{Confirm delete?}
+    confirmDelete -->|No| loadCategories
+    confirmDelete -->|Yes| deleteCategory[Delete category]
+    deleteCategory --> loadCategories

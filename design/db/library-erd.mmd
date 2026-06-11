@@ -1,0 +1,117 @@
+erDiagram
+    USERS {
+        uuid id PK
+        string email UK
+        string full_name
+        string password_hash
+        string role
+        string account_status
+        string phone
+        string address
+        datetime joined_at
+        datetime updated_at
+    }
+
+    BOOK_CATEGORIES {
+        uuid id PK
+        string name UK
+        datetime created_at
+        datetime updated_at
+    }
+
+    BOOKS {
+        uuid id PK
+        uuid category_id FK
+        string title
+        string author
+        int publish_year
+        string isbn
+        string description
+        int quantity_total
+        int quantity_available
+        int quantity_borrowed
+        int quantity_lost
+        int quantity_damaged
+        string catalog_status
+        datetime created_at
+        datetime updated_at
+    }
+
+    BORROW_ORDERS {
+        uuid id PK
+        uuid reader_id FK
+        uuid book_id FK
+        uuid approved_by FK
+        int borrow_days
+        date requested_at
+        date approved_at
+        date borrowed_at
+        date due_date
+        date returned_at
+        int renewal_count
+        string status
+        string rejection_reason
+        string return_condition
+        string return_note
+        datetime created_at
+        datetime updated_at
+    }
+
+    RETURN_REQUESTS {
+        uuid id PK
+        uuid borrow_order_id FK
+        uuid reader_id FK
+        uuid confirmed_by FK
+        string status
+        date requested_at
+        date confirmed_at
+        string note
+        datetime created_at
+        datetime updated_at
+    }
+
+    FINE_LEVELS {
+        uuid id PK
+        string name
+        decimal amount
+        string fine_type
+        boolean is_active
+        uuid created_by FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    FINES {
+        uuid id PK
+        uuid reader_id FK
+        uuid borrow_order_id FK
+        uuid return_request_id FK
+        uuid fine_level_id FK
+        uuid confirmed_by FK
+        string reason
+        decimal amount
+        string status
+        date fined_at
+        date paid_submitted_at
+        date confirmed_at
+        string rejection_reason
+        string note
+        datetime created_at
+        datetime updated_at
+    }
+
+    USERS ||--o{ BORROW_ORDERS : places
+    USERS ||--o{ RETURN_REQUESTS : creates
+    USERS ||--o{ FINES : owes
+    USERS ||--o{ FINE_LEVELS : configures
+
+    BOOK_CATEGORIES ||--o{ BOOKS : classifies
+    BOOKS ||--o{ BORROW_ORDERS : is_borrowed_in
+
+    BORROW_ORDERS ||--o| RETURN_REQUESTS : generates
+    BORROW_ORDERS ||--o{ FINES : may_create
+    RETURN_REQUESTS ||--o{ FINES : may_create
+
+    USERS o|--o{ BORROW_ORDERS : approves
+    USERS o|--o{ RETURN_REQUESTS : confirms
+    USERS o|--o{ FINES : verifies

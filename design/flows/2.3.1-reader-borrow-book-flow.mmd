@@ -1,0 +1,29 @@
+flowchart TD
+    start([Start]) --> openBookDetail[Reader opens book detail]
+    openBookDetail --> checkLogin{Logged in as reader?}
+    checkLogin -->|No| denyAccess[Redirect to login]
+    denyAccess --> endNode([End])
+    checkLogin -->|Yes| clickBorrow[Click Muon Sach]
+
+    clickBorrow --> checkAvailable{Book available count > 0?}
+    checkAvailable -->|No| noStock[Show out of stock message]
+    noStock --> endNode
+    checkAvailable -->|Yes| checkLimit{Borrowed books below limit 5?}
+
+    checkLimit -->|No| limitError[Show borrow limit reached]
+    limitError --> endNode
+    checkLimit -->|Yes| checkFine{Has unpaid fines?}
+
+    checkFine -->|Yes| fineBlocked[Show unpaid fine message]
+    fineBlocked --> endNode
+    checkFine -->|No| chooseDuration[Choose borrow duration]
+
+    chooseDuration --> validateDuration{Duration valid, default 14 and max 30 days?}
+    validateDuration -->|No| durationError[Show invalid duration error]
+    durationError --> chooseDuration
+    validateDuration -->|Yes| createOrder[Create borrow request]
+
+    createOrder --> setPending[Set status = Cho xac nhan]
+    setPending --> saveOrder[Save borrow order]
+    saveOrder --> success[Show borrow request created]
+    success --> endNode

@@ -1,0 +1,28 @@
+flowchart TD
+    start([Start]) --> accessProfile[Reader opens profile page]
+    accessProfile --> checkLogin{Logged in as reader?}
+    checkLogin -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkLogin -->|Yes| loadProfile[System loads profile data]
+
+    loadProfile --> showProfile[Display name, email, phone, address, join date, borrow count, total fines]
+    showProfile --> chooseAction{Choose action}
+
+    chooseAction -->|Update profile| editProfile[Edit name, phone, address]
+    chooseAction -->|Change password| openPasswordForm[Open change password form]
+    chooseAction -->|Exit| endNode
+
+    editProfile --> validateProfile{Name, phone, address valid?}
+    validateProfile -->|No| profileError[Show validation errors]
+    profileError --> editProfile
+    validateProfile -->|Yes| saveProfile[Save updated profile]
+    saveProfile --> profileSuccess[Show profile updated message]
+    profileSuccess --> showProfile
+
+    openPasswordForm --> fillPasswordForm[Enter current password and new password]
+    fillPasswordForm --> validatePasswordChange{Password change valid?}
+    validatePasswordChange -->|No| passwordChangeError[Show password change error]
+    passwordChangeError --> fillPasswordForm
+    validatePasswordChange -->|Yes| savePassword[Save new password]
+    savePassword --> passwordSuccess[Show password changed message]
+    passwordSuccess --> showProfile

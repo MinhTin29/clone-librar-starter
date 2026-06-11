@@ -1,0 +1,18 @@
+flowchart TD
+    start([Start]) --> selectBook[User selects a book from list]
+    selectBook --> loadDetail[System loads book details]
+    loadDetail --> showDetail[Display title, author, ISBN, year, description, available count, borrowed count]
+
+    showDetail --> roleCheck{Viewer is librarian?}
+    roleCheck -->|Yes| showHistory[Show borrow history with reader, borrow date, due date]
+    roleCheck -->|No| hideHistory[Hide librarian only history]
+
+    showHistory --> actionCheck{Viewer is reader?}
+    hideHistory --> actionCheck
+
+    actionCheck -->|Yes| canBorrow[Show Muon sach action]
+    actionCheck -->|No| endNode([End])
+    canBorrow --> chooseBorrow{Borrow now?}
+    chooseBorrow -->|No| endNode
+    chooseBorrow -->|Yes| borrowFlow[Go to borrow book flow]
+    borrowFlow --> endNode

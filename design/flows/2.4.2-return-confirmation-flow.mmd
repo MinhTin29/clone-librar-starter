@@ -1,0 +1,36 @@
+flowchart TD
+    start([Start]) --> openReturnTab[Librarian opens Cho xac nhan tra tab]
+    openReturnTab --> checkRole{Logged in as librarian?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| loadRequests[Load pending return requests]
+
+    loadRequests --> receiveBook[Receive physical book from reader]
+    receiveBook --> clickConfirm[Click Xac nhan tra]
+    clickConfirm --> chooseCondition{Book condition?}
+
+    chooseCondition -->|Binh thuong| normalReturn[Confirm normal return]
+    chooseCondition -->|Hu hong| damagedReturn[Select damage fine level and enter note]
+    chooseCondition -->|Mat| lostReturn[Select lost fine level and enter note]
+
+    normalReturn --> markReturned[Update borrow status = Da tra]
+    markReturned --> increaseAvailable[Increase available quantity]
+    increaseAvailable --> decreaseBorrowed[Decrease borrowed quantity]
+    decreaseBorrowed --> endNode
+
+    damagedReturn --> validateDamaged{Fine selected and note provided?}
+    validateDamaged -->|No| damagedError[Show validation errors]
+    damagedError --> damagedReturn
+    validateDamaged -->|Yes| addLateFineIfNeeded{Late return also applies?}
+    addLateFineIfNeeded -->|Yes| createLateFine[Create late fine]
+    addLateFineIfNeeded -->|No| createDamageFine[Create damage fine]
+    createLateFine --> createDamageFine
+    createDamageFine --> markReturnedDamaged[Update borrow status = Da tra]
+    markReturnedDamaged --> endNode
+
+    lostReturn --> validateLost{Fine selected and note provided?}
+    validateLost -->|No| lostError[Show validation errors]
+    lostError --> lostReturn
+    validateLost -->|Yes| createLostFine[Create lost fine]
+    createLostFine --> markReturnedLost[Update borrow status = Da tra]
+    markReturnedLost --> endNode

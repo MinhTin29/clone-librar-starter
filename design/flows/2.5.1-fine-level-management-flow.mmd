@@ -1,0 +1,30 @@
+flowchart TD
+    start([Start]) --> openFineLevels[Admin opens fine level management]
+    openFineLevels --> checkRole{Logged in as admin?}
+    checkRole -->|No| denyAccess[Redirect to login or show access denied]
+    denyAccess --> endNode([End])
+    checkRole -->|Yes| loadFineTable[Load fine levels table]
+
+    loadFineTable --> chooseAction{Choose action}
+    chooseAction -->|Inline edit| editFine[Edit fine level in table]
+    chooseAction -->|Add new| addFine[Click Them muc phat]
+    chooseAction -->|Delete| deleteFine[Click Xoa]
+    chooseAction -->|Exit| endNode
+
+    editFine --> validateEdit{Name, amount, date valid?}
+    validateEdit -->|No| editError[Show validation errors]
+    editError --> editFine
+    validateEdit -->|Yes| saveEdit[Save fine level update]
+    saveEdit --> loadFineTable
+
+    addFine --> fillFineForm[Enter fine name, amount, date]
+    fillFineForm --> validateAdd{Name not empty, amount > 0, date valid?}
+    validateAdd -->|No| addError[Show validation errors]
+    addError --> fillFineForm
+    validateAdd -->|Yes| createFineLevel[Create fine level]
+    createFineLevel --> loadFineTable
+
+    deleteFine --> confirmDelete{Confirm delete?}
+    confirmDelete -->|No| loadFineTable
+    confirmDelete -->|Yes| removeFineLevel[Delete fine level]
+    removeFineLevel --> loadFineTable
